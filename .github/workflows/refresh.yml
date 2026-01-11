@@ -1,10 +1,12 @@
 name: Refresh Market News Dashboard
 
-on:
-  schedule:
-    - cron: "*/5 * * * *"
-  workflow_dispatch:
+# on:
+#   schedule:
+#     - cron: "*/5 * * * *"  # every 5 minutes
+#   workflow_dispatch:
 
+on:
+  workflow_dispatch:
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
@@ -15,15 +17,22 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run pipeline
         run: |
           python -m src.main
+
+      - name: Disable Jekyll
+        run: |
+          touch output/.nojekyll
+          git add output/.nojekyll
+          git commit -m "Add .nojekyll" || echo "No changes"
 
       - name: Commit & push updated dashboard
         run: |
