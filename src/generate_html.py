@@ -105,7 +105,8 @@ def generate_article_block(article: Dict) -> str:
     """
 
 
-def generate_html_dashboard(articles: List[Dict], output_dir: str = "output") -> str:
+def generate_html_dashboard(articles: List[Dict], output_dir: str = "docs") -> str:
+
     """
     Generates HTML dashboard and returns the index file path.
     """
