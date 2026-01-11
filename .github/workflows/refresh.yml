@@ -1,0 +1,34 @@
+name: Refresh Market News Dashboard
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run pipeline
+        run: |
+          python -m src.main
+
+      - name: Commit & push updated dashboard
+        run: |
+          git config user.name "market-news-bot"
+          git config user.email "bot@github.com"
+          git add output/index.html
+          git commit -m "Auto-refresh market dashboard" || echo "No changes"
+          git push
